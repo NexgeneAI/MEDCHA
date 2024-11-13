@@ -27,22 +27,7 @@ from tasks.palmyra import MedicalLLM
 from tasks.merlin import MerlinTask
 
 TASK_TO_CLASS: Dict[TaskType, Type[BaseTask]] = {
-    TaskType.SERPAPI: SerpAPI,
-    TaskType.EXTRACT_TEXT: ExtractText,
-    TaskType.AFFECT_SLEEP_GET: SleepGet,
-    TaskType.AFFECT_ACTIVITY_GET: ActivityGet,
-    TaskType.AFFECT_SLEEP_ANALYSIS: SleepAnalysis,
-    TaskType.AFFECT_ACTIVITY_ANALYSIS: ActivityAnalysis,
     TaskType.GOOGLE_TRANSLATE: GoogleTranslate,
-    TaskType.ASK_USER: AskUser,
-    TaskType.TEST_FILE: TestFile,
-    TaskType.RUN_PYTHON_CODE: RunPythonCode,
-    TaskType.PPG_GET: PPGGet,
-    TaskType.PPG_ANALYSIS: PPGAnalysis,
-    TaskType.STRESS_ANALYSIS: StressAnalysis,
-    TaskType.QUERY_NUTRITIONIX: QueryNutritionix,
-    TaskType.CALCULATE_FOOD_RISK_FACTOR: CalculateFoodRiskFactor,
-    TaskType.GOOGLE_SEARCH: GoogleSearch,
     TaskType.PUBMED_SEARCH: PubMedSearch,
     TaskType.MEDICAL_LLM: MedicalLLM,
     TaskType.MERLIN_TASK: MerlinTask,

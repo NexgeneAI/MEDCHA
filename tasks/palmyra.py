@@ -18,6 +18,7 @@ class MedicalLLM(BaseTask):
     dependencies: List[str] = []
     inputs: List[str] = ["Medical query as a question or statement"]
     outputs: List[str] = ["Response from the medical language model"]
+    output_type: bool = True
 
     client: Any = None
     nvidia_api_key: Optional[str] = None
@@ -38,7 +39,7 @@ class MedicalLLM(BaseTask):
 
         nvidia_api_key = get_from_dict_or_env(
             values, "nvidia_api_key", "NVIDIA_API_KEY"
-        ).replace('"','')
+        ).replace('"', "")
 
         try:
             from openai import OpenAI

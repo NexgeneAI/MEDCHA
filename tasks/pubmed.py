@@ -23,6 +23,7 @@ class PubMedSearch(BaseTask):
         "List of publication years",
         "List of paper full text content",
     ]
+    output_type: bool = True
 
     def _execute(self, inputs: List[Any]) -> Dict[str, List[Any]]:
         query = inputs[0]

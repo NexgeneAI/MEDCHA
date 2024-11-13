@@ -7,13 +7,16 @@
     pip install -r requirements.txt
     ```
 
-2. Set the required API keys: (for Windows use `set`, else you can use `export`)
-    ```bash
-    set OPENAI_API_KEY=your_openai_api_key
-    set nvidia_api_key=your_nvidia_api_key
-    ```
+2. Set the required API keys by creating `.env` file (see `.env.example`)
 
-## Running the Application
+## Run Application with Interface
+
+To start the application, run:
+```bash
+python interface.py
+```
+
+## Run Application via Terminal
 
 To start the application, run:
 ```bash

@@ -16,6 +16,8 @@ from openCHA.tasks import TaskType
 from openCHA.utils import parse_addresses
 from pydantic import BaseModel
 
+from prompts import MAIN_PROMPT
+
 
 class openCHA(BaseModel):
     name: str = "openCHA"
@@ -83,22 +85,17 @@ class openCHA(BaseModel):
 
         return response
 
-    def respond(
-        self,
-        message,
-        openai_api_key_input,
-        serp_api_key_input,
-        chat_history,
-        check_box,
-        tasks_list,
-    ):
-        os.environ["OPENAI_API_KEY"] = openai_api_key_input
-        os.environ["SEPR_API_KEY"] = serp_api_key_input
+    def respond(self, message, chat_history, check_box, tasks_list):
+        kwargs = {
+            "model_name": "gpt-4o",
+            "response_generator_prefix_prompt": MAIN_PROMPT,
+        }
         response = self._run(
             query=message,
             chat_history=chat_history,
             tasks_list=tasks_list,
             use_history=check_box,
+            **kwargs,
         )
 
         files = parse_addresses(response)

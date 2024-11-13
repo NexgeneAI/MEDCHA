@@ -21,6 +21,7 @@ class MerlinTask(BaseTask):
     dependencies: List[str] = []
     inputs: List[str] = ["Path to a 3D CT image in NIfTI format"]
     outputs: List[str] = ["Formatted string of top phenotypes with probabilities"]
+    output_type: bool = True
 
     model: Any = None
     device: str = None

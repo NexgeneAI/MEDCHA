@@ -2,6 +2,7 @@
 A part of the task implementation is borrowed from LangChain:
 https://github.com/langchain-ai/langchain
 """
+
 from typing import Any
 from typing import Dict
 from typing import List

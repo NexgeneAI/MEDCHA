@@ -73,17 +73,8 @@ class Interface(BaseModel):
             None
 
         """
-
-        def submit_api_keys(openai_api_key, serp_api_key):
-            # Set environment variables
-            os.environ["OPENAI_API_KEY"] = openai_api_key
-            os.environ["SEPR_API_KEY"] = serp_api_key
-
-            print("keys submitted")
-            print(openai_api_key)
-
         with self.gr.Blocks() as demo:
-            chatbot = self.gr.Chatbot(bubble_full_width=False)
+            chatbot = self.gr.Chatbot(bubble_full_width=True)
             with self.gr.Row():
                 msg = self.gr.Textbox(
                     scale=9,
@@ -93,7 +84,7 @@ class Interface(BaseModel):
                 btn = self.gr.UploadButton(
                     "📁",
                     scale=1,
-                    file_types=["image", "video", "audio", "text"],
+                    file_types=["file"],
                 )
                 check_box = self.gr.Checkbox(
                     scale=1,
@@ -104,21 +95,11 @@ class Interface(BaseModel):
 
             with self.gr.Row():
                 tasks = self.gr.Dropdown(
-                    value=[],
+                    value=available_tasks,
                     choices=available_tasks,
                     multiselect=True,
                     label="Tasks List",
                     info="The list of available tasks. Select the ones that you want to use.",
-                )
-
-            with self.gr.Row():
-                openai_api_key_input = self.gr.Textbox(
-                    label="OpenAI API Key",
-                    info="Enter your OpenAI API key here.",
-                )
-                serp_api_key_input = self.gr.Textbox(
-                    label="Serp API Key",
-                    info="Enter your Serp API key here.",
                 )
 
             clear = self.gr.ClearButton([msg, chatbot])
@@ -128,8 +109,6 @@ class Interface(BaseModel):
                 respond,
                 [
                     msg,
-                    openai_api_key_input,
-                    serp_api_key_input,
                     chatbot,
                     check_box,
                     tasks,
@@ -137,9 +116,7 @@ class Interface(BaseModel):
                 [msg, chatbot],
             )
 
-            btn.upload(
-                upload_meta, [chatbot, btn], [chatbot], queue=False
-            )
+            btn.upload(upload_meta, [chatbot, btn], [chatbot], queue=False)
 
         demo.launch(share=share)
         self.interface = demo

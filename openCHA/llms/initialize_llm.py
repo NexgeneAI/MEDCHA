@@ -5,9 +5,7 @@ from openCHA.llms import LLM_TO_CLASS
 from openCHA.llms import LLMType
 
 
-def initialize_llm(
-    llm: str = LLMType.OPENAI, **kwargs: Any
-) -> BaseLLM:
+def initialize_llm(llm: str = LLMType.OPENAI, **kwargs: Any) -> BaseLLM:
     """
     This function initializes and returns an instance of the Language Model Manager (LLM) based on the specified LLM type.
 

@@ -5,9 +5,7 @@ from openCHA.datapipes import DATAPIPE_TO_CLASS
 from openCHA.datapipes import DatapipeType
 
 
-def initialize_datapipe(
-    datapipe: str = DatapipeType.MEMORY, **kwargs: Any
-) -> DataPipe:
+def initialize_datapipe(datapipe: str = DatapipeType.MEMORY, **kwargs: Any) -> DataPipe:
     """
     Initializes and returns an instance of a data pipe based on the specified 'datapipe' type.
 

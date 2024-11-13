@@ -8,13 +8,17 @@ from openCHA.tasks.task import BaseTask
 from openCHA.utils import get_from_dict_or_env
 from pydantic import model_validator
 
+
 class MedicalLLM(BaseTask):
     name: str = "medical_llm"
     chat_name: str = "MedicalLLM"
-    description: str = "Use a pre-trained medical language model to generate responses to queries about medical topics."
+    description: str = (
+        "Use a pre-trained medical language model to generate responses to queries about medical topics."
+    )
     dependencies: List[str] = []
     inputs: List[str] = ["Medical query as a question or statement"]
     outputs: List[str] = ["Response from the medical language model"]
+    output_type: bool = True
 
     client: Any = None
     nvidia_api_key: Optional[str] = None
@@ -35,13 +39,13 @@ class MedicalLLM(BaseTask):
 
         nvidia_api_key = get_from_dict_or_env(
             values, "nvidia_api_key", "NVIDIA_API_KEY"
-        )
-        
+        ).replace('"', "")
+
         try:
             from openai import OpenAI
+
             client = OpenAI(
-                base_url = "https://integrate.api.nvidia.com/v1",
-                api_key = nvidia_api_key
+                base_url="https://integrate.api.nvidia.com/v1", api_key=nvidia_api_key
             )
             values["client"] = client
         except ImportError:
@@ -50,16 +54,16 @@ class MedicalLLM(BaseTask):
                 "Please install it with `pip install google-search-results`."
             )
         return values
-    
+
     def _execute(self, inputs: List[Any]) -> Dict[str, List[Any]]:
         query = inputs[0]
 
         completion = self.client.chat.completions.create(
             model="writer/palmyra-med-70b",
-            messages=[{"role":"user","content":query}],
+            messages=[{"role": "user", "content": query}],
             temperature=0.2,
             top_p=0.7,
-            max_tokens=1024
+            max_tokens=1024,
         )
 
         return completion.choices[0].message.content

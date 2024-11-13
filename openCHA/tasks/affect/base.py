@@ -1,6 +1,7 @@
 """
 Affect - Base
 """
+
 import os
 from typing import List
 
@@ -43,21 +44,14 @@ class Affect(BaseTask):
                 return pd.DataFrame(columns=usecols)
         # Convert the "date" column to a datetime object with the format "YYYY-MM-DD"
         if date_column == "date":
-            df[date_column] = pd.to_datetime(
-                df[date_column], format="%Y-%m-%d"
-            )
+            df[date_column] = pd.to_datetime(df[date_column], format="%Y-%m-%d")
         else:
-            df[date_column] = pd.to_datetime(
-                df[date_column], unit="ms"
-            )
+            df[date_column] = pd.to_datetime(df[date_column], unit="ms")
 
         if end_date or end_date == start_date:
             # Filter the DataFrame to get the rows for the input dates (multiple dates)
             selected_rows = df[
-                (
-                    df[date_column]
-                    >= pd.to_datetime(start_date, format="%Y-%m-%d")
-                )
+                (df[date_column] >= pd.to_datetime(start_date, format="%Y-%m-%d"))
                 & (
                     df[date_column]
                     <= pd.to_datetime(end_date, format="%Y-%m-%d")
@@ -67,17 +61,12 @@ class Affect(BaseTask):
         else:
             # Filter the DataFrame to get the rows for the input date (single dates)
             selected_rows = df[
-                (
-                    df[date_column]
-                    == pd.to_datetime(start_date, format="%Y-%m-%d")
-                )
+                (df[date_column] == pd.to_datetime(start_date, format="%Y-%m-%d"))
             ]
 
         # Check if the input date exists in the DataFrame
         if selected_rows.empty:
-            print(
-                f"No data found between the date {start_date} and {end_date}."
-            )
+            print(f"No data found between the date {start_date} and {end_date}.")
         return selected_rows
 
     def _download_data(
@@ -94,15 +83,11 @@ class Affect(BaseTask):
         # Get the data from the provided link
         response = requests.get(download_url, timeout=120)
         if response.status_code == 200:
-            with open(
-                os.path.join(local_dir, file_name), "wb"
-            ) as file:
+            with open(os.path.join(local_dir, file_name), "wb") as file:
                 file.write(response.content)
             return f"Downloaded {file_name} to {local_dir}."
         else:
-            return (
-                f"Failed to download {file_name} from {download_url}."
-            )
+            return f"Failed to download {file_name} from {download_url}."
 
     def _convert_seconds_to_minutes(
         self, df: pd.DataFrame, column_names: List[str]
@@ -114,22 +99,16 @@ class Affect(BaseTask):
 
     def _dataframe_to_string_output(self, df: pd.DataFrame) -> str:
         # Create a formatted string for each column and its corresponding value
-        formatted_values = [
-            f"{col} = {val}" for col, val in df.items()
-        ]
+        formatted_values = [f"{col} = {val}" for col, val in df.items()]
 
         # Join the formatted values into a single string using a comma and space
         result_string = ", ".join(formatted_values)
 
         return result_string
 
-    def _string_output_to_dataframe(
-        self, input_string: str
-    ) -> pd.DataFrame:
+    def _string_output_to_dataframe(self, input_string: str) -> pd.DataFrame:
         # Split the input string into individual column-value pairs
-        column_value_pairs = [
-            pair.strip() for pair in input_string.split(",")
-        ]
+        column_value_pairs = [pair.strip() for pair in input_string.split(",")]
         # Create a dictionary to store column-value pairs
         data_dict = {}
         # Iterate through the pairs and extract column and value
@@ -149,21 +128,16 @@ class Affect(BaseTask):
         # Create a new DataFrame to store the slopes
         df_out = pd.DataFrame()
         # Iterate over columns
-        columns_list = [
-            col for col in df.columns if "date" not in col.lower()
-        ]
+        columns_list = [col for col in df.columns if "date" not in col.lower()]
         for column in columns_list:
             # Get the x values (dates) and y values (column values)
             # Convert date to numeric days
             x = pd.to_numeric(
-                (df["date"] - df["date"].min())
-                / pd.to_timedelta(1, unit="D")
+                (df["date"] - df["date"].min()) / pd.to_timedelta(1, unit="D")
             )
             y = df[column]
             # Calculate linear regression parameters
-            slope, intercept, r_value, p_value, std_err = linregress(
-                x, y
-            )
+            slope, intercept, r_value, p_value, std_err = linregress(x, y)
             # Add the slope to the result DataFrame
             df_out[column] = [slope]
         return df_out

@@ -1,6 +1,7 @@
 """
 Heavily borrowed from langchain: https://github.com/langchain-ai/langchain/
 """
+
 import re
 from typing import Any
 from typing import List
@@ -127,9 +128,7 @@ Thought: {agent_scratchpad}"""
         # prompt += "\nThought:"
         kwargs["max_tokens"] = 500
         kwargs["stop"] = self._stop
-        response = self._planner_model.generate(
-            query=prompt, **kwargs
-        )
+        response = self._planner_model.generate(query=prompt, **kwargs)
         index = min([response.find(text) for text in self._stop])
         index1 = response.find("\nAction:")
         if index1 == -1:
@@ -184,17 +183,11 @@ Thought: {agent_scratchpad}"""
 
         action_match = re.search(regex, query, re.DOTALL)
         if action_match and includes_answer:
-            if query.find(FINAL_ANSWER_ACTION) < query.find(
-                action_match.group(0)
-            ):
+            if query.find(FINAL_ANSWER_ACTION) < query.find(action_match.group(0)):
                 # if final answer is before the hallucination, return final answer
-                start_index = query.find(FINAL_ANSWER_ACTION) + len(
-                    FINAL_ANSWER_ACTION
-                )
+                start_index = query.find(FINAL_ANSWER_ACTION) + len(FINAL_ANSWER_ACTION)
                 end_index = query.find("\n\n", start_index)
-                return [
-                    PlanFinish(query[start_index:end_index].strip())
-                ]
+                return [PlanFinish(query[start_index:end_index].strip())]
             else:
                 raise ValueError(
                     "Parsing the output produced both a final answer and a parse-able action."
@@ -232,8 +225,6 @@ Thought: {agent_scratchpad}"""
             query,
             re.DOTALL,
         ):
-            raise ValueError(
-                "Invalid Format: Missing 'Action Input:' after 'Action:'"
-            )
+            raise ValueError("Invalid Format: Missing 'Action Input:' after 'Action:'")
         else:
             raise ValueError("Wrong format.")

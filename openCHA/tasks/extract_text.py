@@ -22,9 +22,7 @@ class ExtractText(BaseTask):
     inputs: List[str] = [
         "url to extract the text from. It requires links which is gathered from other tools. Never provide urls on your own."
     ]
-    outputs: List[str] = [
-        "An string containing the text of the scraped webpage."
-    ]
+    outputs: List[str] = ["An string containing the text of the scraped webpage."]
     output_type: bool = False
     sync_playwright: Any = None
     high_level: Any = None
@@ -130,21 +128,15 @@ class ExtractText(BaseTask):
                 # Extract text from the PDF stream
                 text = self.high_level.extract_text(pdf_stream)
                 # Wrap text in basic HTML tags
-                html_content = (
-                    f"<html><body><p>{text}</p></body></html>"
-                )
+                html_content = f"<html><body><p>{text}</p></body></html>"
                 # Parse the HTML content with BeautifulSoup
                 soup = self.bs4(html_content, "lxml")
-                return " ".join(
-                    text for text in soup.stripped_strings
-                )
+                return " ".join(text for text in soup.stripped_strings)
             else:
                 return "Error extracting text. The url is wrong. Try again."
         else:
             with self.sync_playwright() as playwright:
-                chromium = (
-                    playwright.chromium
-                )  # or "firefox" or "webkit".
+                chromium = playwright.chromium  # or "firefox" or "webkit".
                 browser = chromium.launch()
                 page = browser.new_page()
                 response = page.goto(inputs[0])
@@ -156,9 +148,7 @@ class ExtractText(BaseTask):
                     soup = self.bs4(html_content, "lxml")
                     page.close()
                     browser.close()
-                    return " ".join(
-                        text for text in soup.stripped_strings
-                    )
+                    return " ".join(text for text in soup.stripped_strings)
                 else:
                     page.close()
                     browser.close()

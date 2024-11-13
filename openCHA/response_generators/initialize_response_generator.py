@@ -49,15 +49,10 @@ def initialize_response_generator(
 
     if llm not in LLM_TO_CLASS:
         raise ValueError(
-            f"Got unknown llm type: {llm}. "
-            f"Valid types are: {LLM_TO_CLASS.keys()}."
+            f"Got unknown llm type: {llm}. " f"Valid types are: {LLM_TO_CLASS.keys()}."
         )
 
-    response_generator_cls = RESPONSE_GENERATOR_TO_CLASS[
-        response_generator
-    ]
+    response_generator_cls = RESPONSE_GENERATOR_TO_CLASS[response_generator]
     llm_model = LLM_TO_CLASS[llm]()
-    response_generator = response_generator_cls(
-        llm_model=llm_model, prefix=prefix
-    )
+    response_generator = response_generator_cls(llm_model=llm_model, prefix=prefix)
     return response_generator

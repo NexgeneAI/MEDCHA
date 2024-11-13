@@ -1,6 +1,7 @@
 """
 Affect - Get physical activity data
 """
+
 import os
 from typing import Any
 from typing import List
@@ -18,7 +19,9 @@ class ActivityGet(Affect):
 
     name: str = "affect_activity_get"
     chat_name: str = "AffectActivityGet"
-    description: str = "Gathers physical activity data for a patient over a certain period."
+    description: str = (
+        "Gathers physical activity data for a patient over a certain period."
+    )
     dependencies: List[str] = []
     inputs: List[str] = [
         (
@@ -44,9 +47,7 @@ class ActivityGet(Affect):
     #
     file_name: str = "activity.csv"
     device_name: str = "oura"
-    local_dir: str = get_from_env(
-        "DATA_DIR", "DATA_DIR", "data/affect"
-    )
+    local_dir: str = get_from_env("DATA_DIR", "DATA_DIR", "data/affect")
 
     columns_to_keep: List[str] = [
         "date",
@@ -72,9 +73,7 @@ class ActivityGet(Affect):
         inputs: List[Any] = None,
     ) -> str:
         user_id = inputs[0].strip()
-        full_dir = os.path.join(
-            self.local_dir, user_id, self.device_name
-        )
+        full_dir = os.path.join(self.local_dir, user_id, self.device_name)
         df = self._get_data(
             local_dir=full_dir,
             file_name=self.file_name,

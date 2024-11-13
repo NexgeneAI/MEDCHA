@@ -1,6 +1,7 @@
 """
 Heavily borrowed from langchain: https://github.com/langchain-ai/langchain/
 """
+
 import re
 from typing import Any
 from typing import List
@@ -159,17 +160,13 @@ Question: {input}
         ]
         return chunks
 
-    def generate_scratch_pad(
-        self, previous_actions: List[str] = None, **kwargs: Any
-    ):
+    def generate_scratch_pad(self, previous_actions: List[str] = None, **kwargs: Any):
         if previous_actions is None:
             previous_actions = []
 
         agent_scratchpad = ""
         if len(previous_actions) > 0:
-            agent_scratchpad = "\n".join(
-                [f"\n{action}" for action in previous_actions]
-            )
+            agent_scratchpad = "\n".join([f"\n{action}" for action in previous_actions])
         # agent_scratchpad
         if (
             self.summarize_prompt
@@ -181,17 +178,11 @@ Question: {input}
                 max_tokens=self.max_tokens_allowed,
             )
             agent_scratchpad = ""
-            kwargs["max_tokens"] = min(
-                2000, int(self.max_tokens_allowed / len(chunks))
-            )
+            kwargs["max_tokens"] = min(2000, int(self.max_tokens_allowed / len(chunks)))
             for chunk in chunks:
-                prompt = self._shorten_prompt.replace(
-                    "{chunk}", chunk
-                )
-                chunk_summary = (
-                    self._response_generator_model.generate(
-                        query=prompt, **kwargs
-                    )
+                prompt = self._shorten_prompt.replace("{chunk}", chunk)
+                chunk_summary = self._response_generator_model.generate(
+                    query=prompt, **kwargs
                 )
                 agent_scratchpad += chunk_summary + " "
 
@@ -229,9 +220,7 @@ Question: {input}
             self._planner_prompt[0]
             .replace("{input}", query)
             .replace("{meta}", ", ".join(meta))
-            .replace(
-                "{history}", history if use_history else "No History"
-            )
+            .replace("{history}", history if use_history else "No History")
             .replace("{previous_actions}", previous_actions_prompt)
             .replace("{tool_names}", self.task_descriptions())
         )
@@ -239,9 +228,7 @@ Question: {input}
         # prompt += "\nThought:"
         print(prompt)
         kwargs["max_tokens"] = 1000
-        response = self._planner_model.generate(
-            query=prompt, **kwargs
-        )
+        response = self._planner_model.generate(query=prompt, **kwargs)
         print("respp\n\n", response)
         prompt = (
             self._planner_prompt[1]
@@ -255,9 +242,7 @@ Question: {input}
         )
         print("prompt2\n\n", prompt)
         kwargs["stop"] = self._stop
-        response = self._planner_model.generate(
-            query=prompt, **kwargs
-        )
+        response = self._planner_model.generate(query=prompt, **kwargs)
 
         index = min([response.find(text) for text in self._stop])
         response = response[0:index]

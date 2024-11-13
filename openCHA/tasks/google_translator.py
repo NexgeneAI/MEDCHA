@@ -2,6 +2,7 @@
 A part of the task implementation is borrowed from LangChain:
 https://github.com/langchain-ai/langchain
 """
+
 from typing import Any
 from typing import Dict
 from typing import List
@@ -20,9 +21,7 @@ class GoogleTranslate(BaseTask):
 
     name: str = "google_translator"
     chat_name: str = "GoogleTranslator"
-    description: str = (
-        "Translates queries between different languages."
-    )
+    description: str = "Translates queries between different languages."
     dependencies: List[str] = []
     inputs: List[str] = [
         "text to be translated",

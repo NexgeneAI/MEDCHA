@@ -26,9 +26,7 @@ class CustomDebugFormatter(logging.Formatter):
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
-        formatter = CustomDebugFormatter(
-            debug_color, fmt="%(message)s"
-        )
+        formatter = CustomDebugFormatter(debug_color, fmt="%(message)s")
         ch.setFormatter(formatter)
         logger.addHandler(ch)
         return logger

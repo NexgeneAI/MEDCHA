@@ -91,9 +91,7 @@ class RunPythonCode(BaseTask):
         retries = 0
         while retries < self.max_retrie:
             try:
-                prompt = self._generate_prompt(
-                    previous_attempts, inputs
-                )
+                prompt = self._generate_prompt(previous_attempts, inputs)
 
                 kwargs = {"max_tokens": 1000}
                 code = self.llm_model.generate(prompt, **kwargs)
@@ -103,17 +101,13 @@ class RunPythonCode(BaseTask):
 
                 global result
                 result = ""
-                code += (
-                    f"\nresult=custom_function({inputs[0]['data']})"
-                )
+                code += f"\nresult=custom_function({inputs[0]['data']})"
                 exec(code, locals())
                 result = locals().get("result")
                 return result
             except Exception:
                 retries += 1
-                previous_attempts += (
-                    f"\nError:{traceback.format_exc()}"
-                )
+                previous_attempts += f"\nError:{traceback.format_exc()}"
         raise ValueError("Error running code")
 
     def explain(

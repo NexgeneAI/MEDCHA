@@ -71,7 +71,5 @@ class Memory(DataPipe):
         """
 
         if key not in self.data:
-            raise ValueError(
-                f"The data with the key {key} does not exist."
-            )
+            raise ValueError(f"The data with the key {key} does not exist.")
         return self.data[key]

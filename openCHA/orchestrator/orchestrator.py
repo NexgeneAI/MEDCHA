@@ -145,38 +145,22 @@ class Orchestrator(BaseModel):
         if previous_actions is None:
             previous_actions = []
 
-        planner_logger = (
-            tasks_logger
-        ) = (
-            orchestrator_logger
-        ) = (
+        planner_logger = tasks_logger = orchestrator_logger = (
             final_answer_generator_logger
         ) = promptist_logger = error_logger = None
         if verbose:
-            planner_logger = CustomDebugFormatter.create_logger(
-                "Planner", "cyan"
-            )
-            tasks_logger = CustomDebugFormatter.create_logger(
-                "Task", "purple"
-            )
+            planner_logger = CustomDebugFormatter.create_logger("Planner", "cyan")
+            tasks_logger = CustomDebugFormatter.create_logger("Task", "purple")
             orchestrator_logger = CustomDebugFormatter.create_logger(
                 "Orchestrator", "green"
             )
-            final_answer_generator_logger = (
-                CustomDebugFormatter.create_logger(
-                    "Response Generator", "blue"
-                )
+            final_answer_generator_logger = CustomDebugFormatter.create_logger(
+                "Response Generator", "blue"
             )
-            promptist_logger = CustomDebugFormatter.create_logger(
-                "Promptist", "blue"
-            )
-            error_logger = CustomDebugFormatter.create_logger(
-                "Error", "red"
-            )
+            promptist_logger = CustomDebugFormatter.create_logger("Promptist", "blue")
+            error_logger = CustomDebugFormatter.create_logger("Error", "red")
 
-        datapipe = initialize_datapipe(
-            datapipe=datapipe_name, **kwargs
-        )
+        datapipe = initialize_datapipe(datapipe=datapipe_name, **kwargs)
         if verbose:
             orchestrator_logger.debug(
                 f"Datapipe {datapipe_name} is successfully initialized.\n"
@@ -187,9 +171,7 @@ class Orchestrator(BaseModel):
             kwargs["datapipe"] = datapipe
             tasks[task] = initialize_task(task=task, **kwargs)
             if verbose:
-                orchestrator_logger.debug(
-                    f"Task '{task}' is successfully initialized."
-                )
+                orchestrator_logger.debug(f"Task '{task}' is successfully initialized.")
 
         planner = initialize_planner(
             tasks=list(tasks.values()),
@@ -246,9 +228,7 @@ class Orchestrator(BaseModel):
             if task_input in self.runtime:
                 self.runtime[task_input] = True
 
-    def execute_task(
-        self, task_name: str, task_inputs: List[str]
-    ) -> Any:
+    def execute_task(self, task_name: str, task_inputs: List[str]) -> Any:
         """
             Execute the specified task based on the planner's selected **Action**. This method executes a specific task based on the provided action.
             It takes an action as input and retrieves the corresponding task from the available tasks dictionary.
@@ -317,10 +297,7 @@ class Orchestrator(BaseModel):
         final_response = ""
         for action in self.current_actions:
             final_response += action.dict(
-                (
-                    action.output_type
-                    and not self.runtime[action.task_response]
-                )
+                (action.output_type and not self.runtime[action.task_response])
             )
         return final_response
 
@@ -338,15 +315,10 @@ class Orchestrator(BaseModel):
         if use_history:
             prompt = prompt.replace("{history}", history)
 
-        prompt = (
-            prompt.replace("{meta}", ", ".join(meta))
-            + f"\n{final_response}"
-        )
+        prompt = prompt.replace("{meta}", ", ".join(meta)) + f"\n{final_response}"
         return prompt
 
-    def plan(
-        self, query, history, meta, use_history, **kwargs
-    ) -> str:
+    def plan(self, query, history, meta, use_history, **kwargs) -> str:
         """
             Plan actions based on the query, history, and previous actions using the selected planner type.
             This method generates a plan of actions based on the provided query, history, previous actions, and use_history flag.
@@ -442,9 +414,7 @@ class Orchestrator(BaseModel):
             )
         prompt = self.planner_generate_prompt(query)
         if "google_translate" in self.available_tasks:
-            prompt = self.available_tasks["google_translate"].execute(
-                [prompt, "en"]
-            )
+            prompt = self.available_tasks["google_translate"].execute([prompt, "en"])
             source_language = prompt[1]
             prompt = prompt[0]
         # history = self.available_tasks["google_translate"].execute(history+"$#en").text
@@ -466,17 +436,13 @@ class Orchestrator(BaseModel):
                 )
                 vars = {}
                 exec(actions, locals(), vars)
-                final_response = (
-                    self._prepare_planner_response_for_response_generator()
-                )
+                final_response = self._prepare_planner_response_for_response_generator()
                 # print("final resp", final_response)
                 self.current_actions = []
                 self.runtime = {}
                 break
             except (Exception, SystemExit) as error:
-                self.print_log(
-                    "error", f"Planning Error:\n{error}\n\n"
-                )
+                self.print_log("error", f"Planning Error:\n{error}\n\n")
                 self.current_actions = []
                 i += 1
                 if i > self.max_retries:
@@ -508,8 +474,8 @@ class Orchestrator(BaseModel):
         )
 
         if "google_translate" in self.available_tasks:
-            final_response = self.available_tasks[
-                "google_translate"
-            ].execute([final_response, source_language])[0]
+            final_response = self.available_tasks["google_translate"].execute(
+                [final_response, source_language]
+            )[0]
 
         return final_response

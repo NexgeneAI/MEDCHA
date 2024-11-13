@@ -1,6 +1,7 @@
 """
 Affect - Physical activity analysis
 """
+
 import json
 from typing import Any
 from typing import Dict
@@ -101,20 +102,14 @@ class PPGAnalysis(Affect):
         df = None
         for i in range(0, len(ppg), 60 * 20):
             ppgs = [p["ppg"] for p in ppg[i : i + 60 * 20]]
-            ppg_signals, info = self.nk.ppg_process(
-                ppgs, sampling_rate=20
-            )
+            ppg_signals, info = self.nk.ppg_process(ppgs, sampling_rate=20)
             if df is None:
-                df = self.nk.ppg_analyze(
-                    ppg_signals, sampling_rate=20
-                )
+                df = self.nk.ppg_analyze(ppg_signals, sampling_rate=20)
             else:
                 df = pd.concat(
                     [
                         df,
-                        self.nk.ppg_analyze(
-                            ppg_signals, sampling_rate=20
-                        ),
+                        self.nk.ppg_analyze(ppg_signals, sampling_rate=20),
                     ],
                     axis=0,
                     ignore_index=True,

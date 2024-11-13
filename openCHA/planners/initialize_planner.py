@@ -51,8 +51,7 @@ def initialize_planner(
 
     if llm not in LLM_TO_CLASS:
         raise ValueError(
-            f"Got unknown llm type: {llm}. "
-            f"Valid types are: {LLM_TO_CLASS.keys()}."
+            f"Got unknown llm type: {llm}. " f"Valid types are: {LLM_TO_CLASS.keys()}."
         )
 
     planner_cls = PLANNER_TO_CLASS[planner]

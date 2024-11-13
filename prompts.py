@@ -1,4 +1,4 @@
-MAIN_PROMPT1="""As an expert in Evidence-Based Healthcare and Biomedical Question Answering, your task is to intelligently address healthcare-related queries by leveraging both AI and academic resources. Follow these structured steps to ensure comprehensive and evidence-supported responses:
+MAIN_PROMPT1 = """As an expert in Evidence-Based Healthcare and Biomedical Question Answering, your task is to intelligently address healthcare-related queries by leveraging both AI and academic resources. Follow these structured steps to ensure comprehensive and evidence-supported responses:
 
 ### Instructions
 
@@ -30,7 +30,7 @@ Query: "What are the latest treatments for Type 2 Diabetes?"
 
 This structured approach ensures that each query is thoroughly addressed with the latest academic support, maintaining a high standard of reliability and authority in healthcare communication."""
 
-MAIN_PROMPT2="""As an expert in evidence-based healthcare and biomedical question answering, your task is to deliver precise and well-researched information using advanced tools.
+MAIN_PROMPT2 = """As an expert in evidence-based healthcare and biomedical question answering, your task is to deliver precise and well-researched information using advanced tools.
 
 ### Instructions:
 

@@ -18,7 +18,9 @@ class QueryNutritionix(BaseTask):
 
     name: str = "query_nutritionix"
     chat_name: str = "Nutritionix"
-    description: str = "Queries the nutrition contents of a meal or multiple meals and returns the details nutritions values."
+    description: str = (
+        "Queries the nutrition contents of a meal or multiple meals and returns the details nutritions values."
+    )
     dependencies: List[str] = []
     inputs: List[str] = [
         "The query that contains the daily foods, their portion, restaurant and other information regarding the food. You can query all together"
@@ -96,9 +98,7 @@ class QueryNutritionix(BaseTask):
     ) -> str:
         query = inputs[0]
         body = {"query": query}
-        response = requests.post(
-            self.url, json=body, headers=self.headers
-        )
+        response = requests.post(self.url, json=body, headers=self.headers)
 
         foods = response.json()
         return foods

@@ -1,6 +1,7 @@
 """
 Affect - Physical activity analysis
 """
+
 import json
 from typing import Any
 from typing import Dict
@@ -79,9 +80,7 @@ class StressAnalysis(Affect):
         mAE.eval()
 
         mPredictor = self.Predictor()
-        mPredictor.load_state_dict(
-            self.torch.load("models/Predict_1.dict")
-        )
+        mPredictor.load_state_dict(self.torch.load("models/Predict_1.dict"))
         mPredictor.eval()
 
         encoded = mAE.encode(self.torch.FloatTensor(hrv))

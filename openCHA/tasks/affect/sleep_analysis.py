@@ -55,18 +55,12 @@ class SleepAnalysis(Affect):
         inputs: List[Any],
     ) -> str:
         try:
-            df = pd.read_json(
-                StringIO(inputs[0]["data"].strip()), orient="records"
-            )
+            df = pd.read_json(StringIO(inputs[0]["data"].strip()), orient="records")
         except Exception as e:
             print(f"An error occurred: {e}")
-            return json.loads(
-                '{"Data": "No data for the selected date(s)!"}'
-            )
+            return json.loads('{"Data": "No data for the selected date(s)!"}')
         if df.empty:
-            return json.loads(
-                '{"Data": "No data for the selected date(s)!"}'
-            )
+            return json.loads('{"Data": "No data for the selected date(s)!"}')
         analysis_type = inputs[1].strip()
         if analysis_type == "average":
             df = df.drop("date", axis=1)  # No average for date!
@@ -74,9 +68,7 @@ class SleepAnalysis(Affect):
         elif analysis_type == "trend":
             df = self._calculate_slope(df)
         else:
-            raise ValueError(
-                "The input analysis type has not been defined!"
-            )
+            raise ValueError("The input analysis type has not been defined!")
         df = df.round(2)
         json_out = df.to_json(orient="records")
         return json_out

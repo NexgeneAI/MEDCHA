@@ -8,13 +8,21 @@ import json
 import requests
 from openCHA.tasks.task import BaseTask
 
+
 class PubMedSearch(BaseTask):
     name: str = "pubmed_search"
     chat_name: str = "PubMedSearch"
-    description: str = "Search PubMed for scientific papers based on a given query. Allows filtering by publication date range and returning paper abstracts and full text content."
+    description: str = (
+        "Search PubMed for scientific papers based on a given query. Allows filtering by publication date range and returning paper abstracts and full text content."
+    )
     dependencies: List[str] = []
     inputs: List[str] = ["Search query as keyword or phrase"]
-    outputs: List[str] = ["List of PubMed IDs (PMIDs) for relevant papers", "List of paper titles", "List of publication years", "List of paper full text content"]
+    outputs: List[str] = [
+        "List of PubMed IDs (PMIDs) for relevant papers",
+        "List of paper titles",
+        "List of publication years",
+        "List of paper full text content",
+    ]
 
     def _execute(self, inputs: List[Any]) -> Dict[str, List[Any]]:
         query = inputs[0]
@@ -24,7 +32,7 @@ class PubMedSearch(BaseTask):
             "db": "pubmed",
             "term": query,
             "retmode": "json",
-            "retmax": 50  # Increase result limit to 50
+            "retmax": 50,  # Increase result limit to 50
         }
 
         response = requests.get(base_url, params=params)
@@ -52,9 +60,9 @@ class PubMedSearch(BaseTask):
             "pmids": pmids,
             "titles": paper_titles,
             "years": publication_years,
-            "contents": paper_contents
+            "contents": paper_contents,
         }
-    
+
     def _post_execute(self, result: Dict[str, List[Any]]) -> str:
         return super()._post_execute(json.dumps(result))
 

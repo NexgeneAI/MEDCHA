@@ -93,9 +93,7 @@ class AntropicLLM(BaseLLM):
         """
 
         model_max_token = self.models[model_name]
-        token_count = self.llm_model(
-            api_key=self.api_key
-        ).count_tokens(query)
+        token_count = self.llm_model(api_key=self.api_key).count_tokens(query)
         return model_max_token < token_count
 
     def _parse_response(self, response: Dict) -> str:
@@ -148,13 +146,9 @@ class AntropicLLM(BaseLLM):
                 "model_name is not specified or OpenAI does not support provided model_name"
             )
 
-        max_token = (
-            kwargs["max_token"] if "max_token" in kwargs else 32000
-        )
+        max_token = kwargs["max_token"] if "max_token" in kwargs else 32000
         query = self._prepare_prompt(query)
-        response = self.llm_model(
-            api_key=self.api_key
-        ).completions.create(
+        response = self.llm_model(api_key=self.api_key).completions.create(
             model=model_name,
             max_tokens_to_sample=max_token,
             prompt=query,

@@ -68,12 +68,7 @@ class BaseTask(BaseModel):
 
     @property
     def inputs(self):
-        return ", ".join(
-            [
-                f"{str(i)}-{input}"
-                for i, input in enumerate(self.inputs)
-            ]
-        )
+        return ", ".join([f"{str(i)}-{input}" for i, input in enumerate(self.inputs)])
 
     @abstractmethod
     def _execute(
@@ -109,16 +104,18 @@ class BaseTask(BaseModel):
 
         """
         return [
-            json.loads(
-                self.datapipe.retrieve(
-                    re.search(r"datapipe:[0-9a-f\-]{36}", arg)
-                    .group()
-                    .strip()
-                    .split(":")[-1]
+            (
+                json.loads(
+                    self.datapipe.retrieve(
+                        re.search(r"datapipe:[0-9a-f\-]{36}", arg)
+                        .group()
+                        .strip()
+                        .split(":")[-1]
+                    )
                 )
+                if "datapipe" in arg
+                else arg.strip()
             )
-            if "datapipe" in arg
-            else arg.strip()
             for arg in input_args
         ]
 
@@ -172,9 +169,7 @@ class BaseTask(BaseModel):
         return result
 
     def _get_input_format(self):
-        return "\n".join(
-            f"  {i+1}-{word}\n" for i, word in enumerate(self.inputs)
-        )
+        return "\n".join(f"  {i+1}-{word}\n" for i, word in enumerate(self.inputs))
 
     def execute(self, input_args: List[str]) -> str:
         """
@@ -209,8 +204,7 @@ class BaseTask(BaseModel):
 
         """
         dependencies = ",".join(
-            f"{i+1}-{word}"
-            for i, word in enumerate(self.dependencies)
+            f"{i+1}-{word}" for i, word in enumerate(self.dependencies)
         )
         prompt = f"**{self.name}**: {self.description}"
         if len(self.inputs) > 0:

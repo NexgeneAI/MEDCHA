@@ -52,9 +52,7 @@ class SleepGet(Affect):
     #
     file_name: str = "sleep.csv"
     device_name: str = "oura"
-    local_dir: str = get_from_env(
-        "DATA_DIR", "DATA_DIR", "data/affect"
-    )
+    local_dir: str = get_from_env("DATA_DIR", "DATA_DIR", "data/affect")
     columns_to_keep: List[str] = [
         "date",
         "total",
@@ -102,9 +100,7 @@ class SleepGet(Affect):
         inputs: List[Any],
     ) -> str:
         user_id = inputs[0].strip()
-        full_dir = os.path.join(
-            self.local_dir, user_id, self.device_name
-        )
+        full_dir = os.path.join(self.local_dir, user_id, self.device_name)
         df = self._get_data(
             local_dir=full_dir,
             file_name=self.file_name,
@@ -113,9 +109,7 @@ class SleepGet(Affect):
             usecols=self.columns_to_keep,
         )
         df.columns = self.columns_revised
-        df = self._convert_seconds_to_minutes(
-            df, self.variables_in_seconds
-        )
+        df = self._convert_seconds_to_minutes(df, self.variables_in_seconds)
         df = df.round(2)
         json_out = df.to_json(orient="records")
         return json_out

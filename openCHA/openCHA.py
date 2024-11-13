@@ -30,9 +30,7 @@ class openCHA(BaseModel):
     meta: List[str] = []
     verbose: bool = False
 
-    def _generate_history(
-        self, chat_history: List[Tuple[str, str]] = None
-    ) -> str:
+    def _generate_history(self, chat_history: List[Tuple[str, str]] = None) -> str:
         if chat_history is None:
             chat_history = []
 

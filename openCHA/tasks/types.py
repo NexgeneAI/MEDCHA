@@ -21,9 +21,10 @@ from openCHA.tasks.nutritionix import (
     CalculateFoodRiskFactor,
 )
 from openCHA.tasks.nutritionix import QueryNutritionix
-from tasks.pubmed import PubMedSearch
-from tasks.medllm import MedicalLLM
 
+from tasks.pubmed import PubMedSearch
+from tasks.palmyra import MedicalLLM
+from tasks.merlin import MerlinTask
 
 TASK_TO_CLASS: Dict[TaskType, Type[BaseTask]] = {
     TaskType.SERPAPI: SerpAPI,
@@ -44,4 +45,5 @@ TASK_TO_CLASS: Dict[TaskType, Type[BaseTask]] = {
     TaskType.GOOGLE_SEARCH: GoogleSearch,
     TaskType.PUBMED_SEARCH: PubMedSearch,
     TaskType.MEDICAL_LLM: MedicalLLM,
+    TaskType.MERLIN_TASK: MerlinTask,
 }

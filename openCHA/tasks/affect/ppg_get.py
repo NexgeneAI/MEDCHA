@@ -40,9 +40,7 @@ class PPGGet(Affect):
     #
     file_name: str = "ppg.csv"
     device_name: str = "samsung"
-    local_dir: str = get_from_env(
-        "DATA_DIR", "DATA_DIR", "data/affect"
-    )
+    local_dir: str = get_from_env("DATA_DIR", "DATA_DIR", "data/affect")
     columns_to_keep: List[str] = [
         "timestamp",
         "ppg",
@@ -59,9 +57,7 @@ class PPGGet(Affect):
         inputs: List[Any],
     ) -> str:
         user_id = inputs[0].strip()
-        full_dir = os.path.join(
-            self.local_dir, user_id, self.device_name
-        )
+        full_dir = os.path.join(self.local_dir, user_id, self.device_name)
         df = self._get_data(
             local_dir=full_dir,
             file_name=self.file_name,
@@ -71,9 +67,7 @@ class PPGGet(Affect):
             date_column="timestamp",
         )
         df.columns = self.columns_revised
-        start_indices = df.index[
-            (df["hr"] == 0) & (df["hr"].shift(1) != 0)
-        ].tolist()
+        start_indices = df.index[(df["hr"] == 0) & (df["hr"].shift(1) != 0)].tolist()
         df = df.loc[start_indices[-2] : start_indices[-1]]
         df = df.round(2)
         json_out = df.to_json(orient="records")

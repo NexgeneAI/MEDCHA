@@ -20,3 +20,4 @@ class TaskType(str, Enum):
     GOOGLE_SEARCH = "google_search"
     PUBMED_SEARCH = "pubmed_search"
     MEDICAL_LLM = "medical_llm"
+    MERLIN_TASK = "merlin_task"

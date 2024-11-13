@@ -31,9 +31,7 @@ class Action(BaseModel):
     def dict(self, return_result: bool = False):
         response = self.task_response
         if self.output_type and return_result:
-            response = self.datapipe.retrieve(
-                response.split("datapipe:")[-1]
-            )
+            response = self.datapipe.retrieve(response.split("datapipe:")[-1])
 
         return (
             "\n------------------\n"

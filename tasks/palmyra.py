@@ -38,7 +38,7 @@ class MedicalLLM(BaseTask):
 
         nvidia_api_key = get_from_dict_or_env(
             values, "nvidia_api_key", "NVIDIA_API_KEY"
-        )
+        ).replace('"','')
 
         try:
             from openai import OpenAI

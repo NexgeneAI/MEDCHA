@@ -1,4 +1,5 @@
-# HealthUnity
+# MEDCHA
+Multi Modal Evidence-Driven Conversational Healthcare Agent
 
 ## Installation and Setup
 

@@ -6,3 +6,4 @@ class TaskType(str, Enum):
     PUBMED_SEARCH = "pubmed_search"
     MEDICAL_LLM = "medical_llm"
     MERLIN_TASK = "merlin_task"
+    DEID_TASK = "deid_task"

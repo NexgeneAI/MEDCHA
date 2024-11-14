@@ -17,6 +17,18 @@ for task_name in tasks:
 
 task_name = "merlin_task"
 print(task_name)
-task = initialize_task("merlin_task")
+task = initialize_task(task_name)
 print(task._execute(["data/image1.nii.gz"]))
+print("*" * 5)
+
+task_name = "deid_task"
+print(task_name)
+task = initialize_task(task_name)
+print(
+    task._execute(
+        [
+            "Patient John Doe was admitted to New York Hospital on 10th October 2023 under Dr. Smith's care."
+        ]
+    )
+)
 print("*" * 5)

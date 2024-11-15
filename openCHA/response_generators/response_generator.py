@@ -18,7 +18,7 @@ class BaseResponseGenerator(BaseModel):
     llm_model: BaseLLM = None
     prefix: str = ""
     summarize_prompt: bool = True
-    max_tokens_allowed: int = 10000
+    max_tokens_allowed: int = 16000
 
     class Config:
         """Configuration for this pydantic object."""
@@ -62,7 +62,7 @@ class BaseResponseGenerator(BaseModel):
     def divide_text_into_chunks(
         self,
         input_text: str = "",
-        max_tokens: int = 10000,
+        max_tokens: int = 16000,
     ) -> List[str]:
         """
         Generate a response based on the input prefix, query, and thinker (task planner).
@@ -85,7 +85,7 @@ class BaseResponseGenerator(BaseModel):
             input_text=thinker, max_tokens=self.max_tokens_allowed
         )
         thinker = ""
-        kwargs["max_tokens"] = min(2000, int(self.max_tokens_allowed / len(chunks)))
+        kwargs["max_tokens"] = min(16000, int(self.max_tokens_allowed / len(chunks)))
         for chunk in chunks:
             prompt = self._shorten_prompt.replace("{chunk}", chunk)
             chunk_summary = self._response_generator_model.generate(
@@ -131,6 +131,6 @@ class BaseResponseGenerator(BaseModel):
             .replace("{thinker}", thinker)
             .replace("{prefix}", prefix)
         )
-        kwargs["max_tokens"] = 2000
+        kwargs["max_tokens"] = 16000
         response = self._response_generator_model.generate(query=prompt, **kwargs)
         return response

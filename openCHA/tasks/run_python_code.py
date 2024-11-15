@@ -93,7 +93,7 @@ class RunPythonCode(BaseTask):
             try:
                 prompt = self._generate_prompt(previous_attempts, inputs)
 
-                kwargs = {"max_tokens": 1000}
+                kwargs = {"max_tokens": 16000}
                 code = self.llm_model.generate(prompt, **kwargs)
                 previous_attempts = f"\n{code}"
                 pattern = r"```python\n(.*?)```"

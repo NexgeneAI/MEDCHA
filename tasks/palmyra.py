@@ -12,13 +12,23 @@ from pydantic import model_validator
 class MedicalLLM(BaseTask):
     name: str = "medical_llm"
     chat_name: str = "MedicalLLM"
-    description: str = (
-        "Use a pre-trained medical language model to generate responses to queries about medical topics."
-    )
+    description: str = "Generate medical responses using specialized LLM"
     dependencies: List[str] = []
-    inputs: List[str] = ["Medical query as a question or statement"]
-    outputs: List[str] = ["Response from the medical language model"]
-    output_type: bool = True
+    inputs: List[str] = [
+        "Medical query with summative literature search results, CT findings and user query"
+    ]
+    outputs: List[str] = [
+        "Model response with output format include in-text citation as [1], [2] and references title "
+        + """Output Format:
+      In the case of the provided CT images, the analysis from merlin_task suggests a high probability of [Insert phenotype] in the [Insert context, e.g., lung or brain] region, consistent with previous studies on [Insert related condition]. Literature indicates that this feature is present in [X%] of cases presenting with [Insert related symptoms or imaging patterns], as shown in a recent study by [Author(s)] [1].
+      Additionally, recent advancements in [Insert aspect, e.g., early diagnosis of pulmonary infections] have demonstrated improved patient outcomes, as supported by a systematic review published in [Year] [2]. Evidence from [Author(s)] reinforces these findings, with a focus on [Insert specific intervention or treatment] [3].
+
+      References:
+      1. [Author Name(s)], "[Title of Study]," [Year], [Publication Link].
+      2. [Author Name(s)], "[Title of Study]," [Year], [Publication Link].
+      3. [Author Name(s)], "[Title of Study]," [Year], [Publication Link]."""
+    ]
+    output_type: bool = False
 
     client: Any = None
     nvidia_api_key: Optional[str] = None
@@ -61,7 +71,7 @@ class MedicalLLM(BaseTask):
         completion = self.client.chat.completions.create(
             model="writer/palmyra-med-70b",
             messages=[{"role": "user", "content": query}],
-            temperature=0.2,
+            temperature=0.0,
             top_p=0.7,
             max_tokens=1024,
         )
@@ -69,13 +79,11 @@ class MedicalLLM(BaseTask):
         return completion.choices[0].message.content
 
     def explain(self) -> str:
-        explanation = """
-        The MedicalLLMTask uses a pre-trained medical language model to generate responses to queries about medical topics. 
-
-        To use this task, you'll need to provide a medical query as a question or statement. The task will then use the OpenAI API to send the query to the "writer/palmyra-med-70b" model and return the generated response.
-
-        This task can be useful for quickly getting information or insights on medical subjects, such as the mechanisms of action for drugs, the symptoms and causes of diseases, or the latest research in a particular medical field. The response from the language model can be used as a starting point for further research or analysis.
-
-        Note that the language model has been trained on a large corpus of medical literature, but it may not be 100% accurate or up-to-date. The output should be treated as informational and may require verification from other sources.
+        return """
+        Medical LLM using Palmyra-med-70b model:
+        1. Processes medical queries and questions
+        2. Generates responses based on LLM's medical knowledge
+        3. Useful for initial research and information gathering
+        
+        Note: Results should be verified with authoritative sources.
         """
-        return explanation

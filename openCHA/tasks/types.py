@@ -14,8 +14,8 @@ from tasks.medline import MedlinePlusSearch
 TASK_TO_CLASS: Dict[TaskType, Type[BaseTask]] = {
     TaskType.GOOGLE_TRANSLATE: GoogleTranslate,
     TaskType.PUBMED_SEARCH: PubMedSearch,
+    TaskType.MEDLINE_SEARCH: MedlinePlusSearch,
     TaskType.MEDICAL_LLM: MedicalLLM,
     TaskType.MERLIN_TASK: MerlinTask,
     TaskType.DEID_TASK: DeidentificationTask,
-    TaskType.MEDLINE_SEARCH: MedlinePlusSearch,
 }

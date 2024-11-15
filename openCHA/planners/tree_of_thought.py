@@ -27,7 +27,7 @@ class TreeOfThoughtPlanner(BasePlanner):
     """
 
     summarize_prompt: bool = True
-    max_tokens_allowed: int = 10000
+    max_tokens_allowed: int = 16000
 
     class Config:
         """Configuration for this pydantic object."""
@@ -115,6 +115,7 @@ The output variables should directly passed as inputs with no changes in the wor
 If the tool input is a datapipe only put the variable as the input. \
 For each tool, include necessary parameters directly without any names and assume each will return an output. \
 The outputs' description are provided for each Tool individually. Make sure you use the directives when passing the outputs.
+If path is need to use please use exact/plain/full path of the image
 
 Question: {input}
 """,
@@ -142,7 +143,7 @@ Question: {input}
     def divide_text_into_chunks(
         self,
         input_text: str = "",
-        max_tokens: int = 10000,
+        max_tokens: int = 16000,
     ) -> List[str]:
         """
         Generate a response based on the input prefix, query, and thinker (task planner).
@@ -178,7 +179,9 @@ Question: {input}
                 max_tokens=self.max_tokens_allowed,
             )
             agent_scratchpad = ""
-            kwargs["max_tokens"] = min(2000, int(self.max_tokens_allowed / len(chunks)))
+            kwargs["max_tokens"] = min(
+                16000, int(self.max_tokens_allowed / len(chunks))
+            )
             for chunk in chunks:
                 prompt = self._shorten_prompt.replace("{chunk}", chunk)
                 chunk_summary = self._response_generator_model.generate(
@@ -219,17 +222,18 @@ Question: {input}
         prompt = (
             self._planner_prompt[0]
             .replace("{input}", query)
-            .replace("{meta}", ", ".join(meta))
+            .replace("{meta}", meta)
             .replace("{history}", history if use_history else "No History")
             .replace("{previous_actions}", previous_actions_prompt)
             .replace("{tool_names}", self.task_descriptions())
         )
+        print("prompt", prompt)
         # if len(previous_actions) > 0:
         # prompt += "\nThought:"
-        print(prompt)
-        kwargs["max_tokens"] = 1000
+        # print(prompt)
+        kwargs["max_tokens"] = 16000
         response = self._planner_model.generate(query=prompt, **kwargs)
-        print("respp\n\n", response)
+        # print("respp\n\n", response)
         prompt = (
             self._planner_prompt[1]
             .replace(
@@ -240,7 +244,7 @@ Question: {input}
             .replace("{previous_actions}", previous_actions_prompt)
             .replace("{input}", query)
         )
-        print("prompt2\n\n", prompt)
+        # print("prompt2\n\n", prompt)
         kwargs["stop"] = self._stop
         response = self._planner_model.generate(query=prompt, **kwargs)
 

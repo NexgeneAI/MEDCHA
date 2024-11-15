@@ -187,6 +187,7 @@ class OpenAILLM(BaseLLM):
         query = self._prepare_prompt(query)
         response = self.llm_model.chat.completions.create(
             model=model_name,
+            temperature=0.0,
             messages=query,
             max_tokens=max_tokens,
             stop=stop,

@@ -19,7 +19,7 @@ class GoogleTranslate(BaseTask):
 
     """
 
-    name: str = "google_translator"
+    name: str = "google_translate"
     chat_name: str = "GoogleTranslator"
     description: str = "Translates queries between different languages."
     dependencies: List[str] = []

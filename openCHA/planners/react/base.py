@@ -118,7 +118,7 @@ Thought: {agent_scratchpad}"""
             )
         prompt = (
             self._planner_prompt.replace("{input}", query)
-            .replace("{meta}", ", ".join(meta))
+            .replace("{meta}", meta)
             .replace("{history}", history if use_history else "")
             .replace("{agent_scratchpad}", agent_scratchpad)
             .replace("{tool_names}", self.get_available_tasks())
@@ -126,7 +126,7 @@ Thought: {agent_scratchpad}"""
         print("prompt", prompt)
         # if len(previous_actions) > 0:
         # prompt += "\nThought:"
-        kwargs["max_tokens"] = 500
+        kwargs["max_tokens"] = 16000
         kwargs["stop"] = self._stop
         response = self._planner_model.generate(query=prompt, **kwargs)
         index = min([response.find(text) for text in self._stop])

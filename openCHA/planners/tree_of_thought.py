@@ -27,7 +27,7 @@ class TreeOfThoughtPlanner(BasePlanner):
     """
 
     summarize_prompt: bool = True
-    max_tokens_allowed: int = 10000
+    max_tokens_allowed: int = 16000
 
     class Config:
         """Configuration for this pydantic object."""
@@ -143,7 +143,7 @@ Question: {input}
     def divide_text_into_chunks(
         self,
         input_text: str = "",
-        max_tokens: int = 10000,
+        max_tokens: int = 16000,
     ) -> List[str]:
         """
         Generate a response based on the input prefix, query, and thinker (task planner).
@@ -180,7 +180,7 @@ Question: {input}
             )
             agent_scratchpad = ""
             kwargs["max_tokens"] = min(
-                10000, int(self.max_tokens_allowed / len(chunks))
+                16000, int(self.max_tokens_allowed / len(chunks))
             )
             for chunk in chunks:
                 prompt = self._shorten_prompt.replace("{chunk}", chunk)
@@ -231,7 +231,7 @@ Question: {input}
         # if len(previous_actions) > 0:
         # prompt += "\nThought:"
         # print(prompt)
-        kwargs["max_tokens"] = 10000
+        kwargs["max_tokens"] = 16000
         response = self._planner_model.generate(query=prompt, **kwargs)
         # print("respp\n\n", response)
         prompt = (

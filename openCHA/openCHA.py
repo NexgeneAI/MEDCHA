@@ -88,7 +88,7 @@ class openCHA(BaseModel):
     def respond(self, message, chat_history, check_box, tasks_list):
         kwargs = {
             "model_name": "gpt-4o",
-            "response_generator_prefix_prompt": MAIN_PROMPT,
+            "response_generator_prefix_prompt": """Always include References title at the end and list all of them""",
         }
         response = self._run(
             query=MAIN_PROMPT.replace("{query}", message),

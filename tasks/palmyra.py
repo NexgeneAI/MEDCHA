@@ -14,8 +14,20 @@ class MedicalLLM(BaseTask):
     chat_name: str = "MedicalLLM"
     description: str = "Generate medical responses using specialized LLM"
     dependencies: List[str] = []
-    inputs: List[str] = ["Medical query as a question or statement"]
-    outputs: List[str] = ["Model response"]
+    inputs: List[str] = [
+        "Medical query with summative literature search results, CT findings and user query"
+    ]
+    outputs: List[str] = [
+        "Model response with output format include in-text citation as [1], [2] and references title "
+        + """Output Format:
+      In the case of the provided CT images, the analysis from merlin_task suggests a high probability of [Insert phenotype] in the [Insert context, e.g., lung or brain] region, consistent with previous studies on [Insert related condition]. Literature indicates that this feature is present in [X%] of cases presenting with [Insert related symptoms or imaging patterns], as shown in a recent study by [Author(s)] [1].
+      Additionally, recent advancements in [Insert aspect, e.g., early diagnosis of pulmonary infections] have demonstrated improved patient outcomes, as supported by a systematic review published in [Year] [2]. Evidence from [Author(s)] reinforces these findings, with a focus on [Insert specific intervention or treatment] [3].
+
+      References:
+      1. [Author Name(s)], "[Title of Study]," [Year], [Publication Link].
+      2. [Author Name(s)], "[Title of Study]," [Year], [Publication Link].
+      3. [Author Name(s)], "[Title of Study]," [Year], [Publication Link]."""
+    ]
     output_type: bool = False
 
     client: Any = None

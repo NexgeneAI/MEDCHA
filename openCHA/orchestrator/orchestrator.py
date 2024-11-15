@@ -414,14 +414,18 @@ class Orchestrator(BaseModel):
             )
         prompt = self.planner_generate_prompt(query)
         if "google_translate" in self.available_tasks:
-            prompt = self.available_tasks["google_translate"].execute([prompt, "en"])
-            source_language = prompt[1]
-            prompt = prompt[0]
+            start = prompt.find("User query:") + len("User query:")
+            user_query = prompt[start:].strip()
+            translated_user_query, source_language = self.available_tasks[
+                "google_translate"
+            ].execute([user_query, "en"])
 
-        if "deid_task" in self.available_tasks:
-            prompt = self.available_tasks["deid_task"].execute([prompt])
-            print(prompt)
-            print("*" * 50)
+            if "deid_task" in self.available_tasks:
+                translated_user_query = self.available_tasks["deid_task"].execute(
+                    [translated_user_query]
+                )
+
+            prompt = prompt[:start] + translated_user_query
 
         # history = self.available_tasks["google_translate"].execute(history+"$#en").text
         final_response = ""

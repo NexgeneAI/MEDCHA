@@ -13,12 +13,6 @@ Multi Modal Evidence-Driven Conversational Healthcare Agent
 ## Run with Interface
 To start the Gradio application, run:
 ```bash
-python interface.py
-```
-
-## Run in Terminal
-To start the application, run:
-```bash
 python main.py
 ```
 

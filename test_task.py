@@ -33,7 +33,13 @@ print(
 )
 print("*" * 5)"""
 
-task_name = "medline_search"
+"""task_name = "medline_search"
+print(task_name)
+task = initialize_task(task_name)
+print(task._execute(["diabetes"]))
+print("*" * 5)"""
+
+task_name = "pubmed_search"
 print(task_name)
 task = initialize_task(task_name)
 print(task._execute(["diabetes"]))

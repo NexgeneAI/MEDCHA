@@ -17,12 +17,7 @@ class PubMedSearch(BaseTask):
     )
     dependencies: List[str] = []
     inputs: List[str] = ["Search query as keyword or phrase"]
-    outputs: List[str] = [
-        "List of PubMed IDs (PMIDs) for relevant papers",
-        "List of paper titles",
-        "List of publication years",
-        "List of paper full text content",
-    ]
+    outputs: List[str] = ["List of related PubMed papers"]
     output_type: bool = True
 
     def _execute(self, inputs: List[Any]) -> Dict[str, List[Any]]:
@@ -39,42 +34,20 @@ class PubMedSearch(BaseTask):
         response = requests.get(base_url, params=params)
         data = response.json()
 
-        pmids = [str(id) for id in data["esearchresult"]["idlist"]]
-
-        # Fetch additional metadata and content for the papers
-        paper_titles = []
-        publication_years = []
         paper_contents = []
+        pmids = [str(id) for id in data["esearchresult"]["idlist"]]
         for pmid in pmids:
-            meta_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id={pmid}&retmode=json"
-            meta_response = requests.get(meta_url)
-            meta_data = meta_response.json()
-            paper_titles.append(meta_data["result"][pmid]["title"])
-            publication_years.append(meta_data["result"][pmid]["pubdate"][:4])
-
-            # Fetch full text content
             content_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}&retmode=text&rettype=abstract"
             content_response = requests.get(content_url)
             paper_contents.append(content_response.text)
 
-        return {
-            "pmids": pmids,
-            "titles": paper_titles,
-            "years": publication_years,
-            "contents": paper_contents,
-        }
-
-    def _post_execute(self, result: Dict[str, List[Any]]) -> str:
-        return super()._post_execute(json.dumps(result))
+        return paper_contents
 
     def explain(self) -> str:
         explanation = """
         The PubMedSearchTask is used to search for scientific papers on PubMed based on a given query. It allows you to filter the search results by publication date range, and it returns a comprehensive set of metadata for the relevant papers, including:
 
-        1. List of PubMed IDs (PMIDs) for the papers
-        2. List of paper titles
-        3. List of publication years
-        4. List of paper content
+        1. List of related PubMed papers
 
         To use this task, you'll need to provide the following inputs:
 

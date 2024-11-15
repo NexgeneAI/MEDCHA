@@ -8,7 +8,7 @@ load_dotenv()
 
 from openCHA.tasks.initialize_task import initialize_task
 
-tasks = ["pubmed_search", "medical_llm"]
+"""tasks = ["pubmed_search", "medical_llm"]
 for task_name in tasks:
     print(task_name)
     task = initialize_task(task_name)
@@ -31,4 +31,16 @@ print(
         ]
     )
 )
+print("*" * 5)"""
+
+"""task_name = "medline_search"
+print(task_name)
+task = initialize_task(task_name)
+print(task._execute(["diabetes"]))
+print("*" * 5)"""
+
+task_name = "pubmed_search"
+print(task_name)
+task = initialize_task(task_name)
+print(task._execute(["diabetes"]))
 print("*" * 5)

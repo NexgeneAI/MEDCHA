@@ -9,6 +9,7 @@ from tasks.pubmed import PubMedSearch
 from tasks.palmyra import MedicalLLM
 from tasks.merlin import MerlinTask
 from tasks.deid import DeidentificationTask
+from tasks.medline import MedlinePlusSearch
 
 TASK_TO_CLASS: Dict[TaskType, Type[BaseTask]] = {
     TaskType.GOOGLE_TRANSLATE: GoogleTranslate,
@@ -16,4 +17,5 @@ TASK_TO_CLASS: Dict[TaskType, Type[BaseTask]] = {
     TaskType.MEDICAL_LLM: MedicalLLM,
     TaskType.MERLIN_TASK: MerlinTask,
     TaskType.DEID_TASK: DeidentificationTask,
+    TaskType.MEDLINE_SEARCH: MedlinePlusSearch,
 }

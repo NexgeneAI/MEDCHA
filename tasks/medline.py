@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from typing import List, Any, Dict, Optional
 import re
 import json
@@ -7,135 +6,100 @@ import requests
 from openCHA.tasks.task import BaseTask
 import xml.etree.ElementTree as ET
 
-
 class MedlinePlusSearch(BaseTask):
-    name: str = "medlineplus_search"
-    chat_name: str = "MedlinePlusSearch"
-    description: str = (
-        "Search MedlinePlus for health topics based on a given query. Returns relevant health topics "
-        "with titles, summaries, and associated metadata in XML format."
-    )
+    """Search MedlinePlus for health topics and metadata."""
+    
+    name: str = "medline_search"
+    chat_name: str = "MedlineSearch"
+    description: str = "Search MedlinePlus health topics with metadata"
     dependencies: List[str] = []
-    inputs: List[str] = ["Search query as keyword or phrase"]
-    outputs: List[str] = ["List of all related data and sources"]
-    output_type: bool = True
+    inputs: List[str] = ["Search query"]
+    outputs: List[str] = ["Health topics data"]
+    output_type: bool = False
 
     session: Any = requests.Session()
     BASE_URL: str = "https://wsearch.nlm.nih.gov/ws/query"
     DEFAULT_RESULTS: int = 5
 
-    def _build_params(
-        self,
-        query: str,
-        file: Optional[str] = None,
-        server: Optional[str] = None,
-        start_index: int = 0,
-    ) -> Dict[str, str]:
-        """Build query parameters for the API request."""
+    def _build_params(self, query: str, file: Optional[str] = None, 
+                     server: Optional[str] = None, start_index: int = 0) -> Dict[str, str]:
+        """Build API request parameters."""
         params = {
             "db": "healthTopics",
             "term": query,
             "retmax": str(self.DEFAULT_RESULTS),
-            "rettype": "all",
+            "rettype": "all"
         }
-
         if file and server:
-            params.update(
-                {"file": file, "server": server, "retstart": str(start_index)}
-            )
-
+            params.update({"file": file, "server": server, "retstart": str(start_index)})
         return params
 
-    def strip_html_tags(self, text):
-        return re.sub(r"<[^>]+>", "", text)
+    @staticmethod
+    def strip_html_tags(text: str) -> str:
+        """Remove HTML tags from text."""
+        return re.sub(r"<[^>]+>", "", text) if text else ""
 
-    def _execute(self, inputs: List[Any]) -> Dict[str, Any]:
-        query = inputs[0]
+    def _extract_health_topic_data(self, health_topic: Optional[ET.Element]) -> Dict:
+        """Extract health topic metadata."""
+        if not health_topic:
+            return {k: "" for k in ["meta-desc", "title", "url", "id", "language", 
+                                  "date-created", "also-called"]}
+        
+        return {
+            "meta-desc": self.strip_html_tags(health_topic.get("meta-desc")),
+            "title": self.strip_html_tags(health_topic.get("title")),
+            "url": health_topic.get("url"),
+            "id": health_topic.get("id"),
+            "language": health_topic.get("language"),
+            "date-created": health_topic.get("date-created"),
+            "also-called": [self.strip_html_tags(ac.text) 
+                          for ac in health_topic.findall("also-called")]
+        }
 
-        params = self._build_params(query=query)
-        response = self.session.get(self.BASE_URL, params=params)
+    def _execute(self, inputs: List[Any]) -> str:
+        """Search MedlinePlus and return formatted results.
+        
+        Args:
+            inputs: List containing search query
+        Returns:
+            JSON string of health topics data
+        """
+        response = self.session.get(
+            self.BASE_URL, 
+            params=self._build_params(inputs[0])
+        )
         response.raise_for_status()
 
-        # Parse XML response
-        data = response.text
-        root = ET.fromstring(data)
-
+        root = ET.fromstring(response.text)
         documents_data = []
 
-        # Iterate through all <document> elements
-        for document in root.findall(".//document"):
-            # Extract the title
-            title = document.find(".//content[@name='title']")
-            # Extract the URL (from document attribute)
-            url = document.get("url")
-            # Extract alternative titles
-            alt_titles = document.findall(".//content[@name='altTitle']")
-            # Extract the FullSummary
-            full_summary = document.find(".//content[@name='FullSummary']")
-            # Extract healthTopic section
-            health_topic = document.find(".//content[@name='healthTopic']/health-topic")
-
-            # Process data into a dictionary
+        for doc in root.findall(".//document"):
             data = {
-                "title": self.strip_html_tags(title.text) if title is not None else "",
-                "url": url,
-                "altTitle": [
-                    self.strip_html_tags(alt_title.text) for alt_title in alt_titles
-                ],
-                "FullSummary": (
-                    self.strip_html_tags(full_summary.text)
-                    if full_summary is not None
-                    else ""
+                "title": self.strip_html_tags(
+                    doc.find(".//content[@name='title']").text if doc.find(".//content[@name='title']") else ""
                 ),
-                "healthTopic": {
-                    "meta-desc": (
-                        self.strip_html_tags(health_topic.get("meta-desc"))
-                        if health_topic is not None
-                        else ""
-                    ),
-                    "title": (
-                        self.strip_html_tags(health_topic.get("title"))
-                        if health_topic is not None
-                        else ""
-                    ),
-                    "url": health_topic.get("url") if health_topic is not None else "",
-                    "id": health_topic.get("id") if health_topic is not None else "",
-                    "language": (
-                        health_topic.get("language") if health_topic is not None else ""
-                    ),
-                    "date-created": (
-                        health_topic.get("date-created")
-                        if health_topic is not None
-                        else ""
-                    ),
-                    "also-called": [
-                        self.strip_html_tags(also_called.text)
-                        for also_called in health_topic.findall("also-called")
-                    ],
-                },
+                "url": doc.get("url"),
+                "altTitle": [self.strip_html_tags(alt.text) 
+                           for alt in doc.findall(".//content[@name='altTitle']")],
+                "FullSummary": self.strip_html_tags(
+                    doc.find(".//content[@name='FullSummary']").text 
+                    if doc.find(".//content[@name='FullSummary']") else ""
+                ),
+                "healthTopic": self._extract_health_topic_data(
+                    doc.find(".//content[@name='healthTopic']/health-topic")
+                )
             }
-            # Append the document data to the list
             documents_data.append(data)
 
         return json.dumps(documents_data, indent=4)
 
     def explain(self) -> str:
-        explanation = """
-        The MedlinePlusSearch task allows you to search for health topics on MedlinePlus using their Web Service API.
+        return """
+        Searches MedlinePlus health topics API:
+        1. Accepts search query (e.g., "diabetes")
+        2. Returns topic data: title, summary, metadata
+        3. Supports field-specific search (title:value)
         
-        Key Features:
-        - Returns full health topic records including titles, summaries, and metadata
-        - Returns both brief and detailed information for each topic
-        - Returns up to 50 most relevant results
-        
-        Required Input:
-        1. Search query: Text to search for
-        
-        Field Searching:
-        You can limit searches to specific fields using the syntax field:value
-        Available fields: title, alt-title, mesh, full-summary, group
-        
-        Example usage:
-        inputs = ["diabetes"]  # Search for "diabetes"
+        Fields: title, alt-title, mesh, full-summary, group
+        Results limited to top 50 matches.
         """
-        return explanation

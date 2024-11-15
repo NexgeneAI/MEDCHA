@@ -437,7 +437,7 @@ class Orchestrator(BaseModel):
                 vars = {}
                 exec(actions, locals(), vars)
                 final_response = self._prepare_planner_response_for_response_generator()
-                # print("final resp", final_response)
+                print("final resp", final_response)
                 self.current_actions = []
                 self.runtime = {}
                 break

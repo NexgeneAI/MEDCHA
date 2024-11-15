@@ -19,16 +19,16 @@ class GoogleTranslate(BaseTask):
 
     """
 
-    name: str = "google_translator"
+    name: str = "google_translate"
     chat_name: str = "GoogleTranslator"
     description: str = "Translates queries between different languages."
     dependencies: List[str] = []
     inputs: List[str] = [
         "text to be translated",
-        "destination language",
+        "destination language with 2 letter en, tr",
     ]
-    outputs: List[str] = []
-    output_type: bool = False
+    outputs: List[str] = ["source language: translated text"]
+    output_type: bool = True
 
     translator: Any = None  #: :meta private:
 
@@ -78,7 +78,7 @@ class GoogleTranslate(BaseTask):
             return "", ""
         dest = inputs[1] if inputs[1] is not None else "en"
         result = self.translator.translate(inputs[0], dest=dest)
-        return result.text, result.src
+        return result.src + ":"+ result.text
 
     def explain(
         self,

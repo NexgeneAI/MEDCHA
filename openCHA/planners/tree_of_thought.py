@@ -226,10 +226,10 @@ Question: {input}
         )
         # if len(previous_actions) > 0:
         # prompt += "\nThought:"
-        print(prompt)
-        kwargs["max_tokens"] = 1000
+        #print(prompt)
+        kwargs["max_tokens"] = 10000
         response = self._planner_model.generate(query=prompt, **kwargs)
-        print("respp\n\n", response)
+        #print("respp\n\n", response)
         prompt = (
             self._planner_prompt[1]
             .replace(
@@ -240,7 +240,7 @@ Question: {input}
             .replace("{previous_actions}", previous_actions_prompt)
             .replace("{input}", query)
         )
-        print("prompt2\n\n", prompt)
+        #print("prompt2\n\n", prompt)
         kwargs["stop"] = self._stop
         response = self._planner_model.generate(query=prompt, **kwargs)
 

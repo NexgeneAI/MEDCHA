@@ -19,9 +19,9 @@ class MerlinTask(BaseTask):
         "Process a 3D CT image through the Merlin model and return phenotype probabilities."
     )
     dependencies: List[str] = []
-    inputs: List[str] = ["Path to a 3D CT image in NIfTI format"]
-    outputs: List[str] = ["Formatted string of top phenotypes with probabilities"]
-    output_type: bool = True
+    inputs: List[str] = ["NIfTI 3D CT image path"]
+    outputs: List[str] = ["Top phenotype predictions"]
+    output_type: bool = False
 
     model: Any = None
     device: str = None
@@ -91,12 +91,11 @@ class MerlinTask(BaseTask):
         return formatted_output
 
     def explain(self) -> str:
-        explanation = """
-        The MerlinTask takes a path to a 3D CT image as input and processes it through a pre-trained Merlin model.
-        It returns the top 20 predicted phenotypes with their associated probabilities as a formatted string, 
-        making it useful for medical research, diagnosis, or analysis of complex medical images.
+        return """
+        Processes 3D CT images to predict phenotypes:
+        1. Takes NIfTI-formatted CT image as input
+        2. Runs inference using Merlin model
+        3. Returns top 20 phenotype predictions with probabilities
         
-        This task requires a NIfTI-formatted image and provides phenotype predictions based on the trained model. 
-        These predictions are not guaranteed to be diagnostic and should be used as an informational starting point.
+        Note: Results are informational and not diagnostic.
         """
-        return explanation

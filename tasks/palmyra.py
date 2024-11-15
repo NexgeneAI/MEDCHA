@@ -13,12 +13,12 @@ class MedicalLLM(BaseTask):
     name: str = "medical_llm"
     chat_name: str = "MedicalLLM"
     description: str = (
-        "Use a pre-trained medical language model to generate responses to queries about medical topics."
+        "Generate medical responses using specialized LLM"
     )
     dependencies: List[str] = []
     inputs: List[str] = ["Medical query as a question or statement"]
-    outputs: List[str] = ["Response from the medical language model"]
-    output_type: bool = True
+    outputs: List[str] = ["Model response"]
+    output_type: bool = False
 
     client: Any = None
     nvidia_api_key: Optional[str] = None
@@ -69,13 +69,11 @@ class MedicalLLM(BaseTask):
         return completion.choices[0].message.content
 
     def explain(self) -> str:
-        explanation = """
-        The MedicalLLMTask uses a pre-trained medical language model to generate responses to queries about medical topics. 
-
-        To use this task, you'll need to provide a medical query as a question or statement. The task will then use the OpenAI API to send the query to the "writer/palmyra-med-70b" model and return the generated response.
-
-        This task can be useful for quickly getting information or insights on medical subjects, such as the mechanisms of action for drugs, the symptoms and causes of diseases, or the latest research in a particular medical field. The response from the language model can be used as a starting point for further research or analysis.
-
-        Note that the language model has been trained on a large corpus of medical literature, but it may not be 100% accurate or up-to-date. The output should be treated as informational and may require verification from other sources.
+        return """
+        Medical LLM using Palmyra-med-70b model:
+        1. Processes medical queries and questions
+        2. Generates responses based on LLM's medical knowledge
+        3. Useful for initial research and information gathering
+        
+        Note: Results should be verified with authoritative sources.
         """
-        return explanation

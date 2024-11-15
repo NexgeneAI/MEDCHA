@@ -409,14 +409,20 @@ class Orchestrator(BaseModel):
         for meta_data in meta:
             key = self.datapipe.store(meta_data)
             meta_infos += (
-                f"The file with the name ${meta_data.split('/')[-1]}$ is stored with the key $datapipe:{key}$."
-                "Pass this key to the tools when you want to send them over to the tool\n"
+                f"The file with the name {meta_data} is stored"
+                "Pass this name to the tools when you want to send them over to the tool\n"
             )
         prompt = self.planner_generate_prompt(query)
         if "google_translate" in self.available_tasks:
             prompt = self.available_tasks["google_translate"].execute([prompt, "en"])
             source_language = prompt[1]
             prompt = prompt[0]
+
+        if "deid_task" in self.available_tasks:
+            prompt = self.available_tasks["deid_task"].execute([prompt])
+            print(prompt)
+            print("*" * 50)
+
         # history = self.available_tasks["google_translate"].execute(history+"$#en").text
         final_response = ""
         finished = False
@@ -427,6 +433,7 @@ class Orchestrator(BaseModel):
                     "planner",
                     f"Continueing Planning... Try number {i}\n\n",
                 )
+
                 actions = self.plan(
                     query=prompt,
                     history=history,

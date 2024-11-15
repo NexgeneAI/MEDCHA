@@ -9,7 +9,14 @@ load_dotenv()
 from openCHA import openCHA
 from prompts import MAIN_PROMPT
 
-available_tasks = ["medline_search", "pubmed_search", "medical_llm", "merlin_task", "google_translate", "deid_task"]
+available_tasks = [
+    "medline_search",
+    "pubmed_search",
+    "medical_llm",
+    "merlin_task",
+    "google_translate",
+    "deid_task",
+]
 
 
 kwargs = {"model_name": "gpt-4o", "response_generator_prefix_prompt": MAIN_PROMPT}

@@ -12,9 +12,7 @@ from pydantic import model_validator
 class MedicalLLM(BaseTask):
     name: str = "medical_llm"
     chat_name: str = "MedicalLLM"
-    description: str = (
-        "Generate medical responses using specialized LLM"
-    )
+    description: str = "Generate medical responses using specialized LLM"
     dependencies: List[str] = []
     inputs: List[str] = ["Medical query as a question or statement"]
     outputs: List[str] = ["Model response"]
@@ -61,7 +59,7 @@ class MedicalLLM(BaseTask):
         completion = self.client.chat.completions.create(
             model="writer/palmyra-med-70b",
             messages=[{"role": "user", "content": query}],
-            temperature=0.2,
+            temperature=0.0,
             top_p=0.7,
             max_tokens=1024,
         )

@@ -7,9 +7,10 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+
 class DeidentificationTask(BaseTask):
     """Medical text de-identification using RoBERTa model."""
-    
+
     name: str = "deid_task"
     chat_name: str = "MedicalTextDeidentification"
     description: str = "Mask sensitive information in medical text"
@@ -27,15 +28,19 @@ class DeidentificationTask(BaseTask):
         """Initialize de-identification model."""
         try:
             model_name = "obi/deid_roberta_i2b2"
-            values.update({
-                "tokenizer": AutoTokenizer.from_pretrained(model_name),
-                "model": AutoModelForTokenClassification.from_pretrained(model_name),
-            })
+            values.update(
+                {
+                    "tokenizer": AutoTokenizer.from_pretrained(model_name),
+                    "model": AutoModelForTokenClassification.from_pretrained(
+                        model_name
+                    ),
+                }
+            )
             values["ner_pipeline"] = pipeline(
-                "ner", 
-                model=values["model"], 
-                tokenizer=values["tokenizer"], 
-                aggregation_strategy="simple"
+                "ner",
+                model=values["model"],
+                tokenizer=values["tokenizer"],
+                aggregation_strategy="simple",
             )
             return values
         except Exception as e:
@@ -43,7 +48,7 @@ class DeidentificationTask(BaseTask):
 
     def _execute(self, inputs: List[Any]) -> str:
         """De-identify medical text.
-        
+
         Args:
             inputs: List with medical text string
         Returns:
@@ -57,7 +62,7 @@ class DeidentificationTask(BaseTask):
         result = text
 
         for entity in entities:
-            entity_text = text[entity["start"]:entity["end"]]
+            entity_text = text[entity["start"] : entity["end"]]
             result = result.replace(entity_text, f"[{entity['entity_group']}]")
 
         return result

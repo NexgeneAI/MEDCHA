@@ -28,7 +28,7 @@ class PubMedSearch(BaseTask):
             "db": "pubmed",
             "term": query,
             "retmode": "json",
-            "retmax": 10,  # Increase result limit to 50
+            "retmax": 15,  # Increase result limit to 50
         }
 
         response = requests.get(base_url, params=params)

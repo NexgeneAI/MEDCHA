@@ -118,7 +118,7 @@ Thought: {agent_scratchpad}"""
             )
         prompt = (
             self._planner_prompt.replace("{input}", query)
-            .replace("{meta}", ", ".join(meta))
+            .replace("{meta}", meta)
             .replace("{history}", history if use_history else "")
             .replace("{agent_scratchpad}", agent_scratchpad)
             .replace("{tool_names}", self.get_available_tasks())

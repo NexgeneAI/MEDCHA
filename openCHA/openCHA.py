@@ -88,7 +88,7 @@ class openCHA(BaseModel):
     def respond(self, message, chat_history, check_box, tasks_list):
         kwargs = {
             "model_name": "gpt-4o",
-             "response_generator_prefix_prompt": MAIN_PROMPT
+            "response_generator_prefix_prompt": MAIN_PROMPT,
         }
         response = self._run(
             query=MAIN_PROMPT.replace("{query}", message),
@@ -126,7 +126,7 @@ class openCHA(BaseModel):
             reset=self.reset,
             upload_meta=self.upload_meta,
             available_tasks=available_tasks,
-            share=True
+            share=True,
         )
 
     def upload_meta(self, history, file):

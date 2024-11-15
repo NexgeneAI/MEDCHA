@@ -85,7 +85,7 @@ class BaseResponseGenerator(BaseModel):
             input_text=thinker, max_tokens=self.max_tokens_allowed
         )
         thinker = ""
-        kwargs["max_tokens"] = min(2000, int(self.max_tokens_allowed / len(chunks)))
+        kwargs["max_tokens"] = min(10000, int(self.max_tokens_allowed / len(chunks)))
         for chunk in chunks:
             prompt = self._shorten_prompt.replace("{chunk}", chunk)
             chunk_summary = self._response_generator_model.generate(
@@ -131,6 +131,6 @@ class BaseResponseGenerator(BaseModel):
             .replace("{thinker}", thinker)
             .replace("{prefix}", prefix)
         )
-        kwargs["max_tokens"] = 2000
+        kwargs["max_tokens"] = 10000
         response = self._response_generator_model.generate(query=prompt, **kwargs)
         return response

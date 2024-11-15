@@ -19,7 +19,7 @@ class MerlinTask(BaseTask):
         "Process a 3D CT image through the Merlin model and return phenotype probabilities."
     )
     dependencies: List[str] = []
-    inputs: List[str] = ["NIfTI 3D CT image path"]
+    inputs: List[str] = ["NIfTI 3D CT image path as plain"]
     outputs: List[str] = ["Top phenotype predictions"]
     output_type: bool = False
 

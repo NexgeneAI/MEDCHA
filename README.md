@@ -1,4 +1,4 @@
-# MEDCHA
+# MEDCHA [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18Tc6GEM8qHyHl1V_j3uKT1EOsLr8gVTG?usp=sharing)
 Multi Modal Evidence-Driven Conversational Healthcare Agent
 
 ## Installation and Setup

@@ -81,9 +81,9 @@ sympy==1.13.3
 tokenizers==0.15.2
 tomli==2.1.0
 tomlkit==0.12.0
-torch==2.1.2+cu121
-torchaudio==2.1.2+cu121
-torchvision==0.16.2
+torch
+torchaudio
+torchvision
 tqdm==4.67.0
 transformers==4.38.2
 typer==0.13.0
